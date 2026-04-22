@@ -11,7 +11,7 @@ plt.rcParams.update({'font.size': 20})#Consistent fontsize for all figures
 
 
 #Route to the analysed_data.pkl data file, by default in the previous folder to this script
-path = "../analysed_data.pkl"
+path = "../analyzed_data.pkl"
 
 df_data = pd.read_pickle(path)
 
