@@ -22,9 +22,9 @@ plt.rcParams.update({'font.size': 20})
 number_cycles = 1000
 
 
-x0, y0 =df_data[exp]["PD1"]["sdf_100_gauss"][:number_cycles], df_data[exp]["PD2"]["sdf_100_gauss"][:number_cycles]
-x1, y1 = df_data[exp]["PD1"]["sdf_100_gauss"][:number_cycles], df_data[exp]["LP"]["sdf_100_gauss"][1:number_cycles+1]
-x2, y2 = df_data[exp]["PD1"]["sdf_100_gauss"][:number_cycles], np.array(df_data[exp]["intervals"]["LPPD1_delay"][:number_cycles])/10
+x0, y0 = np.array(df_data[exp]["PD1"]["sdf_100_gauss"][:number_cycles])*10, np.array(df_data[exp]["PD2"]["sdf_100_gauss"][:number_cycles])*10
+x1, y1 = np.array(df_data[exp]["PD1"]["sdf_100_gauss"][:number_cycles])*10, np.array(df_data[exp]["LP"]["sdf_100_gauss"][1:number_cycles+1])*10
+x2, y2 = np.array(df_data[exp]["PD1"]["sdf_100_gauss"][:number_cycles])*10, np.array(df_data[exp]["intervals"]["LPPD1_delay"][:number_cycles])/10
 x3, y3 = np.array(df_data[exp]["intervals"]["PD1_period"][:number_cycles])/10, np.array(df_data[exp]["intervals"]["LPPD1_delay"][:number_cycles])/10
 
 
