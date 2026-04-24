@@ -19,9 +19,9 @@ metric_specs = [
     dict(name="VPD", paths=["sync", "vpd"], reducer=np.nanmean),
     dict(name="EB", paths=["sync", "euclid_by_burst"], reducer=np.nanmean),
     dict(name="EC", paths=["sync", "euclid_by_cycle"], reducer=np.nanmean),
-    dict(name="PD1 SDF", paths=["PD1", "sdf_100ms"], reducer=np.nanmean),
-    dict(name="PD2 SDF", paths=["PD2", "sdf_100ms"], reducer=np.nanmean),
-    dict(name="LP SDF", paths=["LP", "sdf_100ms"], reducer=np.nanmean),
+    dict(name="PD1 SDF", paths=["PD1", "sdf_100_gauss"], reducer=np.nanmean),
+    dict(name="PD2 SDF", paths=["PD2", "sdf_100_gauss"], reducer=np.nanmean),
+    dict(name="LP SDF", paths=["LP", "sdf_100_gauss"], reducer=np.nanmean),
     dict(name="PD1 spk/burst", paths=["PD1", "spikes_per_burst"], reducer=np.nanmean),
     dict(name="PD2 spk/burst", paths=["PD2", "spikes_per_burst"], reducer=np.nanmean),
     dict(name="LP spk/burst", paths=["LP", "spikes_per_burst"], reducer=np.nanmean),
@@ -193,10 +193,12 @@ plot_dict = {
     "PD1_avg_ISIs vs PD2_avg_ISIs": (r"PD1 $\overline{ISI}$", r"PD2 $\overline{ISI}$"),
     "PD1_period vs PD1_hyperpolarization": ("PD1 period CV", "PD1 hyperpol CV"),
     "PD1_burst vs PD2_burst": ("PD1 burst CV", "PD2 burst CV"),
-    "vpd vs PD1_sdf": ("VPD", "PD1 SDF"),
-    "Euclid_cycle vs PD1_sdf": ("EC", "PD1 SDF"),
-    "LP_period vs PD1_sdf": ("LP period CV", "PD1 SDF"),
-    "LPPD1_delay vs PD1_sdf ": (rf"LPPD1 delay invariant $R^2$", "PD1 SDF"),
+    #"vpd vs PD1_sdf": ("VPD", "PD1 SDF"),
+    "Euclid_cycle vs PD1_sdf": ("PD1 SDF", "EC"),
+    "LP_period vs PD1_sdf": ("PD1 SDF", "LP period CV"),
+    "PD1_period vs LPPD1_delay": ("PD1 period CV", rf"LPPD1 delay invariant $R^2$"),
+    "LPPD1_delay vs PD1_sdf ": ("PD1 SDF", rf"LPPD1 delay invariant $R^2$")
+    
 }
 
 label_dict = {
@@ -266,7 +268,7 @@ for j in range(len(plot_dict), len(axes)):
 for ax in axes:
     ax.set_box_aspect(1)
 
-fig.subplots_adjust(wspace=0.3, hspace=0.3)
+fig.subplots_adjust(wspace=0.5, hspace=0.3)
 fig.savefig("segment_scatters.svg")
 plt.show()
 
