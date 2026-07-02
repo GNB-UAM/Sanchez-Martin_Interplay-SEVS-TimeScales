@@ -9,6 +9,7 @@ from matplotlib.patches import Patch
 from mpl_toolkits.mplot3d import Axes3D
 import scipy.stats as stats
 from scipy.stats import linregress
+import pingouin as pg
 
 
 #GENERAL CONSTANTS
@@ -318,4 +319,109 @@ scatter_with_regression(x4, y4, ax=axs[3], xlabel = "PD1 SDF (rank)", ylabel= "P
 plt.tight_layout()
 plt.savefig("ranking_2Dplots.svg")
 #plt.show()
+
+
+#STANDAR ERROR OF THE ESTIMATE
+
+slope, intercept, r, p, stderr_slope = linregress(x1, y1)
+
+y_hat = intercept + slope * x1
+see = np.sqrt(np.sum((y1 - y_hat)**2) / (len(x1) - 2))
+
+print("\n")
+print(f"Slope: {slope:.2f} SEE: {see:.2f}")
+
+
+slope, intercept, r, p, stderr_slope = linregress(x2, y2)
+
+y_hat = intercept + slope * x2
+see = np.sqrt(np.sum((y2 - y_hat)**2) / (len(x2) - 2))
+
+print("\n")
+print(f"Slope: {slope:.2f} SEE: {see:.2f}")
+slope, intercept, r, p, stderr_slope = linregress(x3, y3)
+
+y_hat = intercept + slope * x3
+see = np.sqrt(np.sum((y3 - y_hat)**2) / (len(x3) - 2))
+
+print("\n")
+print(f"Slope: {slope:.2f} SEE: {see:.2f}")
+
+
+slope, intercept, r, p, stderr_slope = linregress(x4, y4)
+
+y_hat = intercept + slope * x4
+see = np.sqrt(np.sum((y4 - y_hat)**2) / (len(x4) - 2))
+
+print("\n")
+print(f"Slope: {slope:.2f} SEE: {see:.2f}")
+
+
+
+
+df = pd.DataFrame({
+    'sdf': x1,
+    'r2': x2,
+    'cv': y2
+})
+
+result = pg.corr(x1, y1, method='spearman')
+print("\n")
+print("corr PD1 SDF - PD2 SDF")
+print(result)
+
+result = pg.corr(df['r2'], df['cv'], method='spearman')
+print("\n")
+print("corr R² - CV")
+print(result)
+
+result = pg.corr(df['sdf'], df['r2'], method='spearman')
+print("\n")
+print("corr SDF - R²")
+print(result)
+
+result = pg.corr(df['sdf'], df['cv'], method='spearman')
+print("\n")
+print("corr SDF - CV")
+print(result)
+
+
+#PARTIAL CORRELATIONS
+
+
+
+pcorr_x2_y2 = pg.partial_corr(
+    data=df,
+    x='r2',
+    y='cv',
+    covar='sdf',
+    method='spearman'
+)
+print("\n")
+print("partial corr r2 vs cv (control sdf)")
+print(pcorr_x2_y2)
+
+
+pcorr_x1_x2 = pg.partial_corr(
+    data=df,
+    x='sdf',
+    y='r2',
+    covar='cv',
+    method='spearman'
+)
+print("\n")
+print("partial corr sdf vs r2 (control cv)")
+print(pcorr_x1_x2)
+
+
+pcorr_x1_y2 = pg.partial_corr(
+    data=df,
+    x='sdf',
+    y='cv',
+    covar='r2',
+    method='spearman'
+)
+print("\n")
+print("partial corr sdf vs cv (control r2)")
+print(pcorr_x1_y2)
 
