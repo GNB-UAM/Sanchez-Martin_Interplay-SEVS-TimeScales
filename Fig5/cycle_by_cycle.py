@@ -44,7 +44,7 @@ def plot_cycle_by_cycle_metrics(exp, metrics_specs, start, end, figsize=(15, 2),
         axes[i].set_ylabel(metric["label"].replace(" ", "\n"), rotation=0, labelpad=40)
         axes[i].grid(True, alpha=0.3, axis="x")
 
-    axes[-1].set_xlabel("Cycle")
+    axes[-1].set_xlabel("Cycle #")
     return fig, axes
 
 
@@ -75,4 +75,4 @@ metrics_specs = [
 
 
 fig, axes = plot_cycle_by_cycle_metrics(exp = "12", metrics_specs = metrics_specs, start = 0, end= 100)
-fig.savefig("cycle-by-cycle.svg")
+fig.savefig("cycle_by_cycle.svg")
