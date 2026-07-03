@@ -70,21 +70,26 @@ plt.savefig("pairplots.svg")
 df = pd.DataFrame({
     "x": x2,
     "y": y2,
-    "covar": np.array(df_data[exp]["intervals"]["PD1_period"][:number_cycles]) / 10
+    "period": np.array(df_data[exp]["intervals"]["PD1_period"][:number_cycles]) / 10
 })
+
+result = pg.corr(
+    x=df["x"],
+    y=df["y"]
+)
+print("correlation SDF vs R²")
+print(result)
 
 
 result = pg.partial_corr(
     data=df,
     x="x",
     y="y",
-    covar="covar"
+    covar="period",
+
 )
+print("\n")
+print("partial corr SDF vs R² controling the period")
 print(result)
 
 
-result = pg.corr(
-    x=df["x"],
-    y=df["y"]
-)
-print(result)
