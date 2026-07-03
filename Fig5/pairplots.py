@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import argparse
 import matplotlib.pyplot as plt
+import pingouin as pg
 
 #GENERAL CONSTANTS
 plt.rcParams.update({'font.size': 20})
@@ -31,23 +32,23 @@ x3, y3 = np.array(df_data[exp]["intervals"]["PD1_period"][:number_cycles])/10, n
 fig, axes = plt.subplots(nrows=4, ncols=1, figsize=(8, 12), sharex=False)
 
 
-axes[0].scatter(x0, y0, s = 5, c ="#555555")
+axes[0].scatter(x0, y0, s = 2, c ="#555555")
 axes[0].set_xlabel("PD1 SDF (s⁻¹)")
 axes[0].set_ylabel("PD2 SDF (s⁻¹)")
 
 
-axes[1].scatter(x1, y1, s = 5, c ="#555555")
+axes[1].scatter(x1, y1, s = 2, c ="#555555")
 axes[1].set_xlabel("PD1 SDF (s⁻¹)")
 axes[1].set_ylabel("LP SDF (s⁻¹)")
 
 
-axes[2].scatter(x2, y2, s = 5, c ="#555555")
+axes[2].scatter(x2, y2, s = 2, c ="#555555")
 axes[2].set_xlabel("PD1 SDF (s⁻¹)")
 axes[2].set_ylabel("LPPD1 delay (ms)")
 
 
 
-axes[3].scatter(x3, y3, s = 5, c ="#555555")
+axes[3].scatter(x3, y3, s = 2, c ="#555555")
 axes[3].set_xlabel("PD1 Period (ms)")
 axes[3].set_ylabel("LPPD1 delay (ms)")
 
@@ -62,3 +63,28 @@ plt.tight_layout()
 
 plt.savefig("pairplots.svg")
 
+
+
+#PARTIAL CORR OF SDF VS DELAY CONTROLLING THE PERIOD
+
+df = pd.DataFrame({
+    "x": x2,
+    "y": y2,
+    "covar": np.array(df_data[exp]["intervals"]["PD1_period"][:number_cycles]) / 10
+})
+
+
+result = pg.partial_corr(
+    data=df,
+    x="x",
+    y="y",
+    covar="covar"
+)
+print(result)
+
+
+result = pg.corr(
+    x=df["x"],
+    y=df["y"]
+)
+print(result)

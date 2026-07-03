@@ -12,7 +12,7 @@ import scipy.stats as stats
 #GENERAL CONSTANTS
 plt.rcParams.update({'font.size': 20})
 
-path = "../analyzed_data.pkl"
+path = "../../analyzed_data.pkl"
 df_data = pd.read_pickle(path)
 
 
@@ -78,8 +78,8 @@ ax.scatter(x2, y2, s=3, alpha=0.7, edgecolors="k")
 ax.set_xscale("log")
 ax.set_yscale("log")
 ax.set_ylim(50, 1000)
-ax.set_xlabel("PD1 SDF (s⁻¹)")
-ax.set_ylabel("LPPD1 delay (ms)")
+ax.set_xlabel("PD1 SDF (s⁻¹) (log)")
+ax.set_ylabel("LPPD1 delay (ms) (log)")
 plt.tight_layout()
 plt.savefig("log_sdf_delay.svg")
 
