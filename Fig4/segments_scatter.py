@@ -194,7 +194,8 @@ plot_dict = {
     "PD1_period vs PD1_hyperpolarization": ("PD1 period CV", "PD1 hyperpol CV"),
     "PD1_burst vs PD2_burst": ("PD1 burst CV", "PD2 burst CV"),
     #"vpd vs PD1_sdf": ("VPD", "PD1 SDF"),
-    "Euclid_cycle vs PD1_sdf": ("PD1 SDF", "EC"),
+    #"Euclid_cycle vs PD1_sdf": ("PD1 SDF", "EC"),
+    "Euclid_burst vs PD1_sdf": ("PD1 SDF", "EB"),
     "LP_period vs PD1_sdf": ("PD1 SDF", "LP period CV"),
     "PD1_period vs LPPD1_delay": ("PD1 period CV", rf"LPPD1 delay invariant $R^2$"),
     "LPPD1_delay vs PD1_sdf ": ("PD1 SDF", rf"LPPD1 delay invariant $R^2$")
@@ -212,6 +213,7 @@ label_dict = {
     "PD2 burst CV": "PD2 burst CV",
     "VPD": "VPD",
     "EC": "EC (mV)",
+    "EB": "EB (mV)",
     "LP period CV": "LP period CV",
     "LPPD1 delay invariant $R^2$": r"LPPD1 delay invariant $R^2$",
 }

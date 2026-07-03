@@ -7,6 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import math
+import pingouin as pg
+
 
 #GENERAL CONSTANTS
 plt.rcParams.update({'font.size': 20})
@@ -273,7 +275,8 @@ plot_dict = {
     "PD1_period vs PD1_hyperpolarization": ("PD1 period CV", "PD1 hyperpol CV"),
     "PD1_burst vs PD2_burst": ("PD1 burst CV", "PD2 burst CV"),
     #"vpd vs PD1_sdf": ("VPD", "PD1 SDF"),
-    "Euclid_cycle vs PD1_sdf": ("PD1 SDF", "EC"),
+    "Euclid_burst vs PD1_sdf": ("PD1 SDF", "EB"),
+    #"Euclid_cycle vs PD1_sdf": ("PD1 SDF", "EC"),
     "LP_period vs PD1_sdf": ("PD1 SDF", "LP period CV"),
     "PD1_period vs LPPD1_delay": ("PD1 period CV", rf"LPPD1 delay invariant $R^2$"),
     "LPPD1_delay vs PD1_sdf ": ("PD1 SDF", rf"LPPD1 delay invariant $R^2$")
@@ -290,6 +293,7 @@ label_dict = {
     "PD1 burst CV": "PD1 burst CV",
     "PD2 burst CV": "PD2 burst CV",
     "VPD": "VPD",
+    "EB": "EB (mV)",
     "EC": "EC (mV)",
     "LP period CV": "LP period CV",
     "LPPD1 delay invariant $R^2$": r"LPPD1 delay invariant $R^2$",
@@ -341,9 +345,9 @@ for idx, (key, (col_x, col_y)) in enumerate(plot_dict.items()):
         x = x[mask]
         y = y[mask]
 
-    if key == "Euclid_cycle vs PD1_sdf":
+    if key == "Euclid_burst vs PD1_sdf":
         xmin, xmax = 0, 25
-        ymin, ymax = 0, 100
+        ymin, ymax = 10, 80
 
         mask = (
             (x >= xmin) & (x <= xmax) &
@@ -395,3 +399,30 @@ for ax in axes:
 
 fig.subplots_adjust(wspace=0.03, hspace=0.3)
 fig.savefig("segments_colormesh.svg")
+
+
+
+
+#SPEARMAN
+
+x, y = get_xy_clean(df_plot, "PD1 period CV", rf"LPPD1 delay invariant $R^2$")
+result = pg.corr(x, y, method='spearman')
+print(result)
+
+
+x, y = get_xy_clean(df_plot, "PD1 SDF", rf"LPPD1 delay invariant $R^2$")
+result = pg.corr(x, y, method='spearman')
+print(result)
+
+
+x, y = get_xy_clean(df_plot, "PD1 burst CV", "PD2 burst CV")
+result = pg.corr(x, y, method='spearman')
+print(result)
+
+x, y = get_xy_clean(df_plot, "PD1 SDF", "VPD")
+result = pg.corr(x, y, method='spearman')
+print(result)
+
+x, y = get_xy_clean(df_plot, "PD1 SDF", "EB")
+result = pg.corr(x, y, method='spearman')
+print(result)
