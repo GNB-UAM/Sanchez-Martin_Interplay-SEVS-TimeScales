@@ -44,7 +44,6 @@ metric_specs = [
     ("LP_avg_ISIs_mean",  ["LP",  "avg_ISIs"], np.nanmean),
 
     ("PD1_period_cv",   ["intervals", "PD1_period"],   stats.variation),
-    #("PD2_period_cv",   ["intervals", "PD1_period"],   np.std),
     ("PD2_period_cv",   ["intervals", "PD2_period"],   stats.variation),
     ("LP_period_cv",   ["intervals", "LP_period"],   stats.variation),
 
@@ -200,19 +199,6 @@ metric_display_names = {
     "PD1LP_delay_intercept": "PD1–LP intercept",
 }
 
-exp_col = 'exp'
-
-# Rank only metric columns
-metric_cols = df_wide.columns.drop(exp_col)
-
-ranked_df = df_wide.copy()
-ranked_df[metric_cols] = (
-    df_wide[metric_cols]
-    .rank(axis=0, method='first', ascending=True)
-    .astype(int)
-)
-
-
 
 
 def scatter_with_regression(x, y, ax=None,
@@ -300,130 +286,23 @@ def scatter_with_regression(x, y, ax=None,
 
 
 fig, axs = plt.subplots(1, 4, figsize=(20, 6))
-x1 = ranked_df["PD1_sdf_100ms_mean"]
-y1 = ranked_df["PD2_sdf_100ms_mean"]
+x1 = df_wide["PD1_sdf_100ms_mean"]
+y1 = df_wide["PD2_sdf_100ms_mean"]
 
-x2 = ranked_df["LPPD1_delay_r2"]
-y2 = ranked_df["PD1_period_cv"]
+x2 = df_wide["LPPD1_delay_r2"]
+y2 = df_wide["PD1_period_cv"]
 
-x3 = ranked_df["PD1_sdf_100ms_mean"]
-y3 = ranked_df["LPPD1_delay_r2"]
+x3 = df_wide["PD1_sdf_100ms_mean"]
+y3 = df_wide["LPPD1_delay_r2"]
 
-x4 = ranked_df["PD1_sdf_100ms_mean"]
-y4 = ranked_df["PD1_period_cv"]
+x4 = df_wide["PD1_sdf_100ms_mean"]
+y4 = df_wide["PD1_period_cv"]
 
-scatter_with_regression(x1, y1, ax=axs[0], xlabel = "PD1 SDF (rank)", ylabel="PD2 SDF (rank)", dotsize=30)
-scatter_with_regression(x2, y2, ax=axs[1], xlabel = "PD1 period CV (rank)", ylabel= "LPPD1delay invariant $R^2$ (rank)", dotsize=30)
-scatter_with_regression(x3, y3, ax=axs[2], xlabel = "PD1 SDF (rank)", ylabel= "LPPD1delay invariant $R^2$ (rank)", dotsize=30)
-scatter_with_regression(x4, y4, ax=axs[3], xlabel = "PD1 SDF (rank)", ylabel= "PD1 period CV (rank)", dotsize=30)
+scatter_with_regression(x1, y1, ax=axs[0], xlabel = "PD1 SDF", ylabel="PD2 SDF", dotsize=30)
+scatter_with_regression(x2, y2, ax=axs[1], xlabel = "PD1 period CV", ylabel= "LPPD1delay invariant $R^2$", dotsize=30)
+scatter_with_regression(x3, y3, ax=axs[2], xlabel = "PD1 SDF", ylabel= "LPPD1delay invariant $R^2$", dotsize=30)
+scatter_with_regression(x4, y4, ax=axs[3], xlabel = "PD1 SDF", ylabel= "PD1 period CV", dotsize=30)
 
 plt.tight_layout()
-plt.savefig("ranking.svg")
+plt.savefig("non-ranking_2Dplots.svg")
 #plt.show()
-
-
-#SLOPE AND STANDARD ERROR OF THE ESTIMATE
-
-slope, intercept, r, p, stderr_slope = linregress(x1, y1)
-
-y_hat = intercept + slope * x1
-see = np.sqrt(np.sum((y1 - y_hat)**2) / (len(x1) - 2))
-
-print("\n")
-print(f"Slope: {slope:.2f} SEE: {see:.2f}")
-
-
-slope, intercept, r, p, stderr_slope = linregress(x2, y2)
-
-y_hat = intercept + slope * x2
-see = np.sqrt(np.sum((y2 - y_hat)**2) / (len(x2) - 2))
-
-print("\n")
-print(f"Slope: {slope:.2f} SEE: {see:.2f}")
-slope, intercept, r, p, stderr_slope = linregress(x3, y3)
-
-y_hat = intercept + slope * x3
-see = np.sqrt(np.sum((y3 - y_hat)**2) / (len(x3) - 2))
-
-print("\n")
-print(f"Slope: {slope:.2f} SEE: {see:.2f}")
-
-
-slope, intercept, r, p, stderr_slope = linregress(x4, y4)
-
-y_hat = intercept + slope * x4
-see = np.sqrt(np.sum((y4 - y_hat)**2) / (len(x4) - 2))
-
-print("\n")
-print(f"Slope: {slope:.2f} SEE: {see:.2f}")
-
-
-#CORRELATIONS
-
-df = pd.DataFrame({
-    'sdf': x1,
-    'r2': x2,
-    'cv': y2
-})
-
-result = pg.corr(x1, y1, method='spearman')
-print("\n")
-print("corr PD1 SDF - PD2 SDF")
-print(result)
-
-result = pg.corr(df['r2'], df['cv'], method='spearman')
-print("\n")
-print("corr R² - CV")
-print(result)
-
-result = pg.corr(df['sdf'], df['r2'], method='spearman')
-print("\n")
-print("corr SDF - R²")
-print(result)
-
-result = pg.corr(df['sdf'], df['cv'], method='spearman')
-print("\n")
-print("corr SDF - CV")
-print(result)
-
-
-#PARTIAL CORRELATIONS
-
-
-
-pcorr_x2_y2 = pg.partial_corr(
-    data=df,
-    x='r2',
-    y='cv',
-    covar='sdf',
-    method='spearman'
-)
-print("\n")
-print("partial corr r2 vs cv (control sdf)")
-print(pcorr_x2_y2)
-
-
-pcorr_x1_x2 = pg.partial_corr(
-    data=df,
-    x='sdf',
-    y='r2',
-    covar='cv',
-    method='spearman'
-)
-print("\n")
-print("partial corr sdf vs r2 (control cv)")
-print(pcorr_x1_x2)
-
-
-pcorr_x1_y2 = pg.partial_corr(
-    data=df,
-    x='sdf',
-    y='cv',
-    covar='r2',
-    method='spearman'
-)
-print("\n")
-print("partial corr sdf vs cv (control r2)")
-print(pcorr_x1_y2)
-
-
