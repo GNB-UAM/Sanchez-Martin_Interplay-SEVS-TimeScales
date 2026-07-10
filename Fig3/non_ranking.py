@@ -281,6 +281,89 @@ def scatter_with_regression(x, y, ax=None,
 
 
 
+def scatter_with_correlation(x, y, ax=None,
+                            xlabel='X', ylabel='Y',
+                            title=None,
+                            square=True, 
+                            dotsize = 7,
+                            plotline = True):
+
+
+    x = np.asarray(x)
+    y = np.asarray(y)
+
+    """
+    # Remove NaNs
+    mask = ~np.isnan(x) & ~np.isnan(y)
+    x = x[mask]
+    y = y[mask]"""
+
+    # Regression
+    result = linregress(x, y)
+
+    slope = result.slope
+    intercept = result.intercept
+    r2 = result.rvalue ** 2
+    #p_value = result.pvalue
+    stderr = result.stderr
+    
+    rho, p_value = stats.spearmanr(x, y)
+    #slope, intercept = np.polyfit(x, y, 1)
+    #y_pred = slope * x + intercept
+    #ss_res = np.sum((y - y_pred) ** 2)
+    #ss_tot = np.sum((y - np.mean(y)) ** 2)
+    #r2 = 1 - (ss_res / ss_tot)
+    
+    corr_result = pg.corr(x, y, method='spearman')
+    rho = corr_result['r'].iloc[0]
+    pval = corr_result['p_val'].iloc[0]
+
+    
+    """rho, p = fast_spearman_perm(x,y)
+    print(rho)
+    print(p)"""
+
+
+    # Create figure if needed
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    # Scatter
+    ax.scatter(x, y, s = dotsize)
+
+    # Regression line
+    x_line = np.sort(x)
+
+    if plotline:
+        ax.plot(x_line, slope * x_line + intercept, color='red')
+
+    # Equation text
+    #eq_text = f'y = {slope:.2f}x + {intercept:.2f}\n$R^2$ = {r2:.2f}\n$p$-value = {p_value:.2e}'#With equation
+    #eq_text = f'$R^2$ = {r2:.2f}\n$p$-value = {p_value:.2e}'#Without equation
+    #eq_text = f'$R^2$ = {r2:.2f}'#only R2
+    eq_text = rf'$\rho$ = {rho:.2f}' + '\n' + rf'$p$ = {pval:.3g}'
+    ax.text(0.05, 0.95, eq_text,
+            transform=ax.transAxes,
+            verticalalignment='top')
+
+    # Labels
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    if title is not None:
+        ax.set_title(title)
+
+    # Enforce square aspect ratio
+    if square:
+        ax.set_box_aspect(1)
+
+    return fig, ax, slope, intercept, r2
+
 
 
 
@@ -298,11 +381,11 @@ y3 = df_wide["LPPD1_delay_r2"]
 x4 = df_wide["PD1_sdf_100ms_mean"]
 y4 = df_wide["PD1_period_cv"]
 
-scatter_with_regression(x1, y1, ax=axs[0], xlabel = "PD1 SDF", ylabel="PD2 SDF", dotsize=30)
-scatter_with_regression(x2, y2, ax=axs[1], xlabel = "PD1 period CV", ylabel= "LPPD1delay invariant $R^2$", dotsize=30)
-scatter_with_regression(x3, y3, ax=axs[2], xlabel = "PD1 SDF", ylabel= "LPPD1delay invariant $R^2$", dotsize=30)
-scatter_with_regression(x4, y4, ax=axs[3], xlabel = "PD1 SDF", ylabel= "PD1 period CV", dotsize=30)
+scatter_with_correlation(x1, y1, ax=axs[0], xlabel = "PD1 SDF", ylabel="PD2 SDF", dotsize=30)
+scatter_with_correlation(x2, y2, ax=axs[1], xlabel = "PD1 period CV", ylabel= "LPPD1delay invariant $R^2$", dotsize=30)
+scatter_with_correlation(x3, y3, ax=axs[2], xlabel = "PD1 SDF", ylabel= "LPPD1delay invariant $R^2$", dotsize=30)
+scatter_with_correlation(x4, y4, ax=axs[3], xlabel = "PD1 SDF", ylabel= "PD1 period CV", dotsize=30)
 
 plt.tight_layout()
-plt.savefig("non-ranking_2Dplots.svg")
+plt.savefig("non-ranking.svg")
 #plt.show()
