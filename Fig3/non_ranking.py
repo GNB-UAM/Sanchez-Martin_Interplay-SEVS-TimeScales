@@ -332,21 +332,22 @@ def scatter_with_correlation(x, y, ax=None,
 
     # Scatter
     ax.scatter(x, y, s = dotsize)
-
+    
+    """
     # Regression line
     x_line = np.sort(x)
 
     if plotline:
-        ax.plot(x_line, slope * x_line + intercept, color='red')
+        ax.plot(x_line, slope * x_line + intercept, color='red')"""
 
     # Equation text
     #eq_text = f'y = {slope:.2f}x + {intercept:.2f}\n$R^2$ = {r2:.2f}\n$p$-value = {p_value:.2e}'#With equation
     #eq_text = f'$R^2$ = {r2:.2f}\n$p$-value = {p_value:.2e}'#Without equation
     #eq_text = f'$R^2$ = {r2:.2f}'#only R2
-    eq_text = rf'$\rho$ = {rho:.2f}' + '\n' + rf'$p$ = {pval:.3g}'
+    """eq_text = rf'$\rho$ = {rho:.2f}' + '\n' + rf'$p$ = {pval:.3g}'
     ax.text(0.05, 0.95, eq_text,
             transform=ax.transAxes,
-            verticalalignment='top')
+            verticalalignment='top')"""
 
     # Labels
     ax.set_xlabel(xlabel)
@@ -366,14 +367,13 @@ def scatter_with_correlation(x, y, ax=None,
 
 
 
-
-
 fig, axs = plt.subplots(1, 4, figsize=(20, 6))
 x1 = df_wide["PD1_sdf_100ms_mean"]
 y1 = df_wide["PD2_sdf_100ms_mean"]
 
-x2 = df_wide["LPPD1_delay_r2"]
-y2 = df_wide["PD1_period_cv"]
+x2 = df_wide["PD1_period_cv"]
+y2 = df_wide["LPPD1_delay_r2"]
+
 
 x3 = df_wide["PD1_sdf_100ms_mean"]
 y3 = df_wide["LPPD1_delay_r2"]

@@ -385,15 +385,12 @@ def scatter_with_correlation(x, y, ax=None,
 
 
 
-
-
-
 fig, axs = plt.subplots(1, 4, figsize=(20, 6))
 x1 = ranked_df["PD1_sdf_100ms_mean"]
 y1 = ranked_df["PD2_sdf_100ms_mean"]
 
-x2 = ranked_df["LPPD1_delay_r2"]
-y2 = ranked_df["PD1_period_cv"]
+x2 = ranked_df["PD1_period_cv"]
+y2 = ranked_df["LPPD1_delay_r2"]
 
 x3 = ranked_df["PD1_sdf_100ms_mean"]
 y3 = ranked_df["LPPD1_delay_r2"]
