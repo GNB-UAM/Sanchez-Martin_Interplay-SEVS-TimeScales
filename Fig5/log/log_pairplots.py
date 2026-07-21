@@ -88,3 +88,15 @@ result = stats.spearmanr(x2, y2)
 print(f"Spearman Correlation Coefficient: {result.statistic:.2f}")
 print(f"p-value: {result.pvalue:.2e}")
 print(repr(result.pvalue))
+
+
+
+
+fig, ax = plt.subplots(figsize = (8, 8))
+ax.scatter(1/x2, y2, s=3, alpha=0.7, edgecolors="k")
+# Set logarithmic scale on the x variable
+ax.set_ylim(50, 1000)
+ax.set_xlabel("1/ PD1 SDF (s⁻¹)")
+ax.set_ylabel("LPPD1 delay (ms)")
+plt.tight_layout()
+plt.savefig("1x_sdf_delay.svg")
