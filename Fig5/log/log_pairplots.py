@@ -100,3 +100,12 @@ ax.set_xlabel("1/ PD1 SDF (s⁻¹)")
 ax.set_ylabel("LPPD1 delay (ms)")
 plt.tight_layout()
 plt.savefig("1x_sdf_delay.svg")
+
+
+
+fig, ax = plt.subplots(figsize = (4, 4))
+ax.scatter(1/x2, y2, s=1, alpha=0.7, c ="#555555")
+ax.set_xticks([1,2])
+ax.set_yticks([250,500,750])
+plt.tight_layout()
+plt.savefig("inset_1x.svg")
