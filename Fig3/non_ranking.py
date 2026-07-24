@@ -19,6 +19,7 @@ plt.rcParams.update({
     "xtick.labelsize": 20,
     "ytick.labelsize": 20,
 })
+plt.rcParams["svg.fonttype"] = "none"
 
 #Route to the analysed_data.pkl data file, by default in the previous folder to this script
 path = "../analyzed_data.pkl"
@@ -344,10 +345,10 @@ def scatter_with_correlation(x, y, ax=None,
     #eq_text = f'y = {slope:.2f}x + {intercept:.2f}\n$R^2$ = {r2:.2f}\n$p$-value = {p_value:.2e}'#With equation
     #eq_text = f'$R^2$ = {r2:.2f}\n$p$-value = {p_value:.2e}'#Without equation
     #eq_text = f'$R^2$ = {r2:.2f}'#only R2
-    """eq_text = rf'$\rho$ = {rho:.2f}' + '\n' + rf'$p$ = {pval:.3g}'
-    ax.text(0.05, 0.95, eq_text,
+    eq_text = rf'$\rho$ = {rho:.2f}' + '\n' + rf'$p$ = {pval:.3g}'
+    ax.text(0.05, 1.20, eq_text,
             transform=ax.transAxes,
-            verticalalignment='top')"""
+            verticalalignment='top')
 
     # Labels
     ax.set_xlabel(xlabel)
