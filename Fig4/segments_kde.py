@@ -247,6 +247,17 @@ def kde_colormesh(
         rasterized=True
     )
 
+    rho, _ = stats.spearmanr(x, y)
+
+    ax.text(
+        0.98, 0.98,
+        rf"$\rho = {rho:.2f}$",
+        transform=ax.transAxes,
+        ha="right",
+        va="top",
+        color="white",
+    )
+
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     ax.set_box_aspect(1)
@@ -419,9 +430,11 @@ x, y = get_xy_clean(df_plot, "PD1 burst CV", "PD2 burst CV")
 result = pg.corr(x, y, method='spearman')
 print(result)
 
+
 x, y = get_xy_clean(df_plot, "PD1 SDF", "VPD")
 result = pg.corr(x, y, method='spearman')
 print(result)
+
 
 x, y = get_xy_clean(df_plot, "PD1 SDF", "EB")
 result = pg.corr(x, y, method='spearman')
